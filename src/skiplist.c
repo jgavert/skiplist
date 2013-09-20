@@ -12,7 +12,7 @@ Node* SK_createList(int height) /* Header node creation */
     abort();
   tmp->MAX_HEIGHT = height;
   tmp->height = height;
-  tmp->value = 123456;
+  tmp->value = 0; //This will be treated as length, used only in printing
   tmp->list = malloc(sizeof(Node*) * height);
   if (tmp->list == NULL)
     abort();
@@ -30,7 +30,11 @@ Node* SK_createList(int height) /* Header node creation */
 // Done ?
 int randomHeight(int value)
 {
-  return (rand() % value)+1;
+  int tmp = 1; //always have atleast 1 level
+  while((float)rand()/(float)(RAND_MAX) > 0.5) {tmp++;}
+  if (tmp>value)
+    tmp=value;
+  return tmp;
 }
 
 // Undone
@@ -80,7 +84,7 @@ int SK_insert(Node* list, int value) /* insertion doh */
   for (int i=0;i<list->MAX_HEIGHT;i++)
   {
     if (result[i]->value == value)
-      return -1;
+      return 0;
   }
 
   // So now we can insert new value :)
@@ -102,6 +106,8 @@ int SK_insert(Node* list, int value) /* insertion doh */
     result[i]->list[i] = tmp;
   }
   // wtf this cannot work
+  // It does :D
+  list->value++;
   return 1;
 }
 
@@ -109,8 +115,8 @@ int SK_insert(Node* list, int value) /* insertion doh */
 void SK_print(Node* list) /* beautiful presentation of the skiplist */
 {
   Node* current = list->list[0];
-  printf("skiplist contents: ");
-  while(current != NULL) {
+  printf("SkipList contents: \n");
+  /*while(current != NULL) {
     printf("%d ", current->value);
     if (current->list[0] != NULL)
     {
@@ -119,4 +125,53 @@ void SK_print(Node* list) /* beautiful presentation of the skiplist */
     current = current->list[0];
   }
   printf("\n");
+  */
+
+  //Advanced printing
+  int length = list->value;
+  int height = list->height;
+  int** table = malloc(sizeof(int*)*length);
+  for (int i=0;i<length;i++)
+  {
+    table[i] = malloc(sizeof(int*)*height);
+    if (table[i] == NULL)
+    {
+      printf("OMGWTFBBQABORT!!11");
+      abort();
+    }
+  }
+
+  current = list->list[0]; //I know this is confusing, it's not even important
+  int x=0;
+  while(current != NULL || x < length) {
+    // Add the elements from bottom to table
+    for (int k=0;k<current->height;k++)
+    {
+      //printf("%d, ",current->value);
+      table[x][k] = current->value;
+    }
+    for (int k=current->height;k<=current->MAX_HEIGHT;k++)
+    {
+      table[x][k] = -1; // This is actually quite tedious to do... annoying
+                        // Replace with minint or something
+    }
+    current = current->list[0];
+    x++;
+  }
+
+  // Lets Print what we have
+  // Line at a time of course :F
+  for (int i=height;i>=0;i--) {
+    printf("[START]");
+    for (int k=0;k<length;k++) {
+      if (table[k][i] == -1) {
+        printf("-------");
+      }
+      else {
+        printf("->[%03d]",table[k][i]);
+      }
+    }
+    printf("->[NULL]\n");
+  }
 }
+
