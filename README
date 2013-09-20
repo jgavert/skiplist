@@ -5,3 +5,6 @@ ps:
   Supports all but number -1, accepting pull requests that change this
   dependecy to something like MIN_INTEGER or whatever that is.
   Look the printing code for reasons, why '-1' is bad.
+
+  Also Delete... might not be that trivial ahiahiahiahia...
+  Depends if you have complete understanding what SK_innerfind does.
