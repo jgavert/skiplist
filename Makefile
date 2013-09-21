@@ -5,7 +5,7 @@ INCLUDE_DIRS := -I lib/linux/SDL2/include -I lib/linux/glew/include -I lib/share
 WARNINGS := -pedantic -Wall -Wextra -Wno-parentheses
 
 PACKAGES :=
-CC      := gcc-4.7
+CC      := gcc
 CCFLAGS := $(WARNINGS) -std=c99 -O0 $(INCLUDE_DIRS)
 #CCFLAGS += $(shell pkg-config --cflags $(PACKAGES))
 

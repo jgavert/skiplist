@@ -4,17 +4,21 @@
 #include <time.h>
 #include <limits.h>
 
+void* SuperMalloc(size_t size)
+{
+  void* tmp = malloc(size);
+  if (tmp == NULL)
+    abort();
+  return tmp;
+}
+
 // Done ? Undone, no end point created
 Node* SK_createList(int height) /* Header node creation */
 {
-  Node* tmp = malloc(sizeof(Node));
-  if (tmp == NULL)
-    abort();
+  Node* tmp = SuperMalloc(sizeof(Node));
   tmp->height = height;
   tmp->value = 0; //This will be treated as length, used only in printing
-  tmp->list = malloc(sizeof(Node*) * height);
-  if (tmp->list == NULL)
-    abort();
+  tmp->list = SuperMalloc(sizeof(Node*) * height);
 
   //create endpoint, that is NULL
   for (int i=0;i<height;i++)
@@ -40,7 +44,7 @@ int randomHeight(int value)
 Node** SK_innerfind(Node* list, int value)
 {
   int max_height = list->height;
-  Node** update = malloc(sizeof(Node*)*max_height);
+  Node** update = SuperMalloc(sizeof(Node*)*max_height);
 
   Node* current = list;
   int i = max_height-1;
@@ -72,6 +76,7 @@ int SK_innerfind2(Node** result, int value)
 
 // ... wtf is this function for...
 // atleast I can find nodes now >_>
+// Untested also :D
 Node* SK_find(Node* list, int value) /* either find the node or returns null */
 {
   Node** result = SK_innerfind(list, value);
@@ -84,7 +89,7 @@ Node* SK_find(Node* list, int value) /* either find the node or returns null */
   return NULL;
 }
 
-// Maybe?
+// havent broken so far
 int SK_insert(Node* list, int value) /* insertion doh */
 {
   Node** result = SK_innerfind(list, value);
@@ -95,15 +100,11 @@ int SK_insert(Node* list, int value) /* insertion doh */
   }
 
   // So now we can insert new value :)
-  Node* tmp = malloc(sizeof(Node));
-  if (tmp == NULL)
-    abort();
+  Node* tmp = SuperMalloc(sizeof(Node));
   tmp->value = value;
   int addheight = randomHeight(list->height);
   tmp->height = addheight;
-  tmp->list = malloc(sizeof(Node*) * addheight);
-  if (tmp->list == NULL)
-    abort();
+  tmp->list = SuperMalloc(sizeof(Node*) * addheight);
 
   // Lets put this node into the right place
   for (int i=0;i<addheight;i++)
@@ -145,24 +146,18 @@ int SK_delete(Node* list, int value)
   return 1;
 }
 
-// Simple version
+// :D
 void SK_print(Node* list) /* beautiful presentation of the skiplist */
 {
   Node* current = list->list[0];
   printf("SkipList contents: \n");
 
-  //Advanced printing
   int length = list->value;
   int height = list->height;
-  int** table = malloc(sizeof(int*)*length);
+  int** table = SuperMalloc(sizeof(int*)*length);
   for (int i=0;i<length;i++)
   {
-    table[i] = malloc(sizeof(int)*height);
-    if (table[i] == NULL)
-    {
-      printf("OMGWTFBBQABORT!!11");
-      abort();
-    }
+    table[i] = SuperMalloc(sizeof(int)*height);
   }
 
   current = list->list[0]; //I know this is confusing, it's not even important
@@ -198,6 +193,7 @@ void SK_print(Node* list) /* beautiful presentation of the skiplist */
     printf("->[NULL]\n");
   }
 
+  //Lol lets free shit
   for (int k=0;k<length;k++)
   {
     free(table[k]);
@@ -205,6 +201,7 @@ void SK_print(Node* list) /* beautiful presentation of the skiplist */
   free(table);
 }
 
+// YOU ARE ALL FREE NOW!
 void SK_free(Node* skiplist)
 {
   if (skiplist->value == 0)
@@ -213,7 +210,7 @@ void SK_free(Node* skiplist)
     free(skiplist);
   }
   //First we need pointers to all nodes... lol
-  Node** nodes = malloc(sizeof(Node*)*skiplist->value);
+  Node** nodes = SuperMalloc(sizeof(Node*)*skiplist->value);
   Node* tmp = skiplist->list[0];
   int i = 0;
   while (tmp != NULL)
@@ -221,6 +218,8 @@ void SK_free(Node* skiplist)
     nodes[i++] = tmp;
     tmp = tmp->list[0];
   }
+  // So we can reverse free them :D
+  // because I Dont have links to the earlier nodes
   i--;
   for (i=i;i>=0;i--)
   {
