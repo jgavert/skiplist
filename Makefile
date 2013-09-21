@@ -6,7 +6,7 @@ WARNINGS := -pedantic -Wall -Wextra -Wno-parentheses
 
 PACKAGES :=
 CC      := gcc
-CCFLAGS := $(WARNINGS) -std=c99 -O0 $(INCLUDE_DIRS)
+CCFLAGS := $(WARNINGS) -std=c99 -O3 $(INCLUDE_DIRS)
 #CCFLAGS += $(shell pkg-config --cflags $(PACKAGES))
 
 LIBS :=

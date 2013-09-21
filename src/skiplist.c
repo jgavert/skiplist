@@ -82,8 +82,9 @@ Node* SK_find(Node* list, int value) /* either find the node or returns null */
   Node** result = SK_innerfind(list, value);
   if (SK_innerfind2(result, value))
   {
+    Node* tmp = result[0]->list[0];
     free(result);
-    return result[0]->list[0]; // tedious but should work;
+    return tmp; // tedious but should work;
   }
   free(result);
   return NULL;
@@ -132,7 +133,7 @@ int SK_delete(Node* list, int value)
     return 0;
   }
   int resultHeight = list->height;
-  printf("resultHeight: %d", resultHeight);
+  //printf("resultHeight: %d", resultHeight);
   for (int i=0;i<resultHeight;i++)
   {
     if (result[i]->list[i] == NULL || result[i]->list[i]->value != value)

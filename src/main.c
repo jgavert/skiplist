@@ -17,6 +17,11 @@ int main()
       printf("Already added\n");
     //SK_print(skiplist);
   }
+  Node* tmp = SK_find(skiplist, luku);
+  if (tmp != NULL)
+    printf("Found: %d\n", tmp->value);
+  else
+    printf("Didn't find\n");
   SK_print(skiplist);
   printf("\n\nDeleting %d...\n", luku);
   SK_delete(skiplist, luku);
