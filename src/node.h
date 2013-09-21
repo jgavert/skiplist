@@ -4,7 +4,6 @@
 typedef struct _node {
   int value;
   unsigned int height;
-  int MAX_HEIGHT;
   struct _node** list;
 } Node;
 

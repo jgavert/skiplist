@@ -9,13 +9,18 @@ int main()
 {
   Node* skiplist = SK_createList(10);
   srand(time(0));
+  int luku;
   for (int i=0;i<15;i++) {
-    int luku = rand()%1000;
+    luku = rand()%1000;
     printf("Adding %d. node, value %d\n", i, luku);
     if (!SK_insert(skiplist, luku))
       printf("Already added\n");
     //SK_print(skiplist);
   }
+  SK_print(skiplist);
+  printf("\n\nDeleting %d...\n", luku);
+  SK_delete(skiplist, luku);
+
   /*
   for (int i=0;i<10;i++)
   {
@@ -26,5 +31,6 @@ int main()
   }
   */
   SK_print(skiplist);
+  SK_free(skiplist);
   return 1;
 }
