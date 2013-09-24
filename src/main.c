@@ -12,7 +12,7 @@ int main()
   int luku;
   int max = 0;
   for (int i=0;i<15;i++) {
-    luku = rand()%1000;
+    luku = (rand()%2000)-1000;
     if (luku > max)
       max = luku;
     printf("Adding %d. node, value %d\n", i, luku);

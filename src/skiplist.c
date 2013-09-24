@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <limits.h>
+#include <math.h>
 
 void* SuperMalloc(size_t size)
 {
@@ -195,10 +196,18 @@ void SK_print(Node* list) /* beautiful presentation of the skiplist */
     printf("[START]");
     for (int k=0;k<length;k++) {
       if (table[k][i] == INT_MIN) {
-        printf("-------");
+        printf("--------");
       }
       else {
-        printf("->[%03d]",table[k][i]);
+        if (table[k][i] < 0)
+        {
+          printf("->[");
+          if (fabs(table[k][i]) < 100)
+            printf(" ");
+          printf("%03d]",table[k][i]);
+        }
+        else
+          printf("->[ %03d]",table[k][i]);
       }
     }
     printf("->[NULL]\n");
@@ -302,10 +311,18 @@ void SK_print2(Node* list) /* beautiful presentation of the skiplist */
           done = 0;
           break;
         }
-        printf("-------");
+        printf("--------");
       }
       else {
-        printf("->[%03d]",table[k][i]);
+        if (table[k][i] < 0)
+        {
+          printf("->[");
+          if (fabs(table[k][i]) < 100)
+            printf(" ");
+          printf("%03d]",table[k][i]);
+        }
+        else
+          printf("->[ %03d]",table[k][i]);
         done = 0;
       }
     }
