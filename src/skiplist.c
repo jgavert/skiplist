@@ -55,9 +55,8 @@ Node** SK_innerfind(Node* list, int value)
     if (current->list[i] == NULL || current->list[i]->value >= value)
     {
       update[i--] = current;
-      continue;
     }
-    else if (current->list[i]->value < value)
+    else
     {
       current = current->list[i];
     }
@@ -77,16 +76,27 @@ int SK_innerfind2(Node** result, int value)
 // ... wtf is this function for...
 // atleast I can find nodes now >_>
 // Untested also :D
+// Ill just write a proper find
 Node* SK_find(Node* list, int value) /* either find the node or returns null */
 {
-  Node** result = SK_innerfind(list, value);
-  if (SK_innerfind2(result, value))
+  int max_height = list->height;
+
+  Node* current = list;
+  if (current == NULL)
+    return NULL;
+  int i = max_height-1;
+  while(i >= 0)
   {
-    Node* tmp = result[0]->list[0];
-    free(result);
-    return tmp; // tedious but should work;
+    if (current->value == value) break;
+    if (current->list[i] == NULL || current->list[i]->value > value)
+    {
+      i--;
+      continue;
+    }
+    current = current->list[i];
   }
-  free(result);
+  if (current->value == value)
+    return current;
   return NULL;
 }
 
@@ -230,5 +240,83 @@ void SK_free(Node* skiplist)
   free(skiplist->list);
   free(skiplist);
   free(nodes);
+}
+
+
+// experimental print
+void SK_print2(Node* list) /* beautiful presentation of the skiplist */
+{
+  Node* current = list->list[0];
+  printf("SkipList contents: \n");
+
+  int length = list->value;
+  int height = list->height;
+  int** table = SuperMalloc(sizeof(int*)*length);
+  for (int i=0;i<length;i++)
+  {
+    table[i] = SuperMalloc(sizeof(int)*height);
+  }
+
+  current = list->list[0]; //I know this is confusing, it's not even important
+  int x=0;
+  while(current != NULL || x < length) {
+    // Add the elements from bottom to table
+    for (unsigned int k=0;k<current->height;k++)
+    {
+      //printf("%d, ",current->value);
+      table[x][k] = current->value;
+    }
+    for (unsigned int k=current->height;k<list->height;k++)
+    {
+      table[x][k] = INT_MIN;
+    }
+    current = current->list[0];
+    x++;
+  }
+
+  // Lets Print what we have
+  // Line at a time of course :F
+  int done = 0;
+  for (int i=height-1;i>=0;i--)
+  {
+    printf("[START]");
+    for (int k=0;k<length;k++) {
+      if (table[k][i] == INT_MIN) {
+        int asd = 1;
+        if (!done)
+        {
+          asd = 0;
+          for (int x = k; x<length;x++)
+          {
+            if (table[x][i] != INT_MIN)
+            {
+              asd = 1;
+              break;
+            }
+          }
+          done = 1;
+          // asd = 1 jos halutaan printtaa ------
+        }
+        if (!asd && done)
+        {
+          done = 0;
+          break;
+        }
+        printf("-------");
+      }
+      else {
+        printf("->[%03d]",table[k][i]);
+        done = 0;
+      }
+    }
+    printf("->\n");
+  }
+
+  //Lol lets free shit
+  for (int k=0;k<length;k++)
+  {
+    free(table[k]);
+  }
+  free(table);
 }
 

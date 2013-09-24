@@ -10,6 +10,7 @@ Node* SK_find(Node*,int); /* either find the node or returns null */
 int SK_insert(Node*,int); /* insertion doh */
 int SK_delete(Node*,int);
 void SK_print(Node*); /* beautiful presentation of the skiplist */
+void SK_print2(Node*); /* beautiful presentation of the skiplist */
 void SK_free(Node*);
 
 #endif /* SKIPLIST_H  */
